@@ -1,117 +1,169 @@
-# Twitch Recorder iOS App
+# Twitch Recorder iOS Releases
 
-Flutter companion app for the existing Node.js Twitch Recorder server.
+[🇩🇪 Deutsche README](README.de.md)
 
-The iPhone app does not run Streamlink or FFmpeg itself. Keep the Node server
-running on your Mac, NAS, or Docker host and connect the app to that server over
-your local network or VPN.
+This repository contains public release builds and an AltStore-compatible source for **Twitch Recorder iOS**.
 
-## Run In The iOS Simulator
+Twitch Recorder iOS can be opened and used locally on your iPhone without connecting to the recorder server first. You can explore the app, configure settings, and use the available local app features without running the server.
 
-From this directory:
+For the best experience and for real unattended Twitch recordings, you should also install and run the Twitch Recorder server. The server does the actual recording work in the background, so your iPhone does not have to stay open or connected the whole time.
 
-```bash
-flutter run
+## AltStore Source
+
+You can install Twitch Recorder iOS through the AltStore-compatible source from this repository.
+
+Source URL:
+
+```txt
+https://raw.githubusercontent.com/atillatheboss/twitch-recorder-ios-releases/main/altstore-source.json
 ```
 
-Default server URL inside the app:
+The AltStore source is generated automatically from the latest release. When a new release is published, the source will be updated so compatible apps can detect the newest version.
 
-```text
-http://127.0.0.1:3001
-```
+## How It Works
 
-This works for the iOS Simulator when the Node server runs locally with:
+The iOS app is a companion app for the Twitch Recorder server.
 
-```bash
-npm start
-```
+The app itself does not run Streamlink or FFmpeg directly on the iPhone. Instead, the recorder server handles the actual recording, downloading, processing, and media management.
 
-## Run On An iPhone
+You can use the app in two ways:
 
-1. Start the recorder server on the host machine.
-2. Find the host's LAN IP address, for example `192.168.178.20`.
-3. Open the app's server sheet and set:
+### Local Mode
 
-```text
-http://192.168.178.20:3001
-```
+Use the app without connecting to a server.
 
-When using Docker Compose, use the mapped host port:
+This is useful for:
 
-```text
-http://192.168.178.20:3002
-```
+- Opening and testing the app
+- Exploring the interface
+- Managing local settings
+- Preparing the app before connecting it to a recorder server
 
-You can also bake a default URL into a local build:
+### Server Mode
 
-```bash
-flutter run --dart-define=RECORDER_BASE_URL=http://192.168.178.20:3001
-```
+Connect the app to a running Twitch Recorder server.
 
-## License Server
+This unlocks the full recorder experience:
 
-Commercial app builds can require a license server:
+- Start real Twitch recordings
+- Schedule recordings
+- Record streams without being present
+- Manage active and scheduled jobs
+- Browse recordings
+- Play recorded media
+- Search and download VODs and clips
+- View recorder metrics and server settings
 
-```bash
-flutter run \
-  --dart-define=LICENSE_SERVER_URL=https://licenses.example.com \
-  --dart-define=LICENSE_APP_ID=twitch-recorder-ios
-```
+For real recording usage, Server Mode is recommended.
 
-The app posts license checks to `/api/licenses/verify` by default. Override the
-path with `LICENSE_VERIFICATION_PATH` if your server uses a different route.
+## Automatic Server Detection
 
-Request body:
+The app can automatically detect a compatible recorder server on your network.
 
-```json
-{
-  "licenseKey": "USER-LICENSE-KEY",
-  "installationId": "stable-local-installation-id",
-  "appId": "twitch-recorder-ios",
-  "platform": "ios"
-}
-```
+To use this:
 
-Expected success response:
+1. Start the Twitch Recorder server on your Mac, NAS, home server, or Docker host.
+2. Make sure your iPhone is on the same network or connected through VPN.
+3. Open the app.
+4. Tap **Configure Recorder Server**.
+5. Select the detected server or enter the server manually if needed.
 
-```json
-{
-  "valid": true,
-  "message": "License active",
-  "plan": "pro",
-  "holder": "Customer Name",
-  "expiresAt": "2027-01-01T00:00:00Z"
-}
-```
+## Features
 
-Without a valid license, the app locks recorder, recordings, VOD/download,
-local media actions, and metrics. Settings remain available so users can enter
-or refresh the license key. A previously valid license can be used offline for
-up to three days while the license server is temporarily unreachable.
+- Use the app locally without setting up the server first
+- Automatically detect the recorder server from the app
+- Start Twitch recordings from your iPhone
+- Select stream quality, schedule, duration, end time, and chat options
+- Search Twitch channels with live/offline status
+- Manage active and scheduled recording jobs
+- Pause, resume, stop, cancel, and extend jobs
+- Browse recorded media
+- Copy recording links
+- Finalize MP4 recordings
+- Play recordings natively on iOS
+- Search and download Twitch VODs and clips through the server
+- Manage download jobs and downloaded media
+- View recorder metrics and app/server settings
 
-## Build For iOS
+## Requirements
 
-```bash
-flutter build ios --no-codesign \
-  --dart-define=LICENSE_SERVER_URL=https://licenses.example.com
-```
+To use the app locally, you need:
 
-For installation on a physical iPhone, open `ios/Runner.xcworkspace` in Xcode,
-select your Apple development team, set a bundle identifier, and run the app on
-the device.
+- An iPhone
+- A valid IPA build or the AltStore-compatible source
+- A sideloading method such as LiveContainer, SideStore, or AltStore
 
-## Implemented App Areas
+For the full recording experience, you also need:
 
-- Recorder start form with quality, schedule, duration/end time, chat toggle,
-  channel suggestions, and per-channel extra chat selection
-- Twitch channel suggestions with live/offline status while typing in recorder,
-  extra chat, and VOD search fields
-- Active and scheduled jobs with pause, resume, stop, cancel, and extend actions
-- Recordings library with MP4/HLS link copy, MP4 finalization, processing control,
-  native iOS playback, and delete action
-- VOD and clip search with separate VOD/Clip tabs plus server-side download controls
-- Download jobs and downloaded media list with native iOS playback
-- Dedicated metrics tab and recorder settings
+- A running Twitch Recorder server
+- Network access from the iPhone to the server
+- Enough storage on the server host for recordings
 
-Playback is implemented through a small iOS `AVPlayerViewController` bridge in
-`ios/Runner/AppDelegate.swift`, not through an additional Flutter plugin.
+## Installation
+
+You can install the app through the AltStore-compatible source or by manually installing the IPA.
+
+### Option 1: Install Through the AltStore Source
+
+1. Install **LiveContainer**, **SideStore**, or **AltStore** on your iPhone.
+2. Open the app you want to use for sideloading.
+3. Go to the **Sources** section.
+4. Add the source URL from this README.
+5. Find **Twitch Recorder iOS** in the source.
+6. Install the app.
+7. Open Twitch Recorder iOS.
+8. Use it locally or tap **Configure Recorder Server** to connect to your recorder server.
+
+### Option 2: Install the IPA Manually
+
+1. Open the [Releases](https://github.com/atillatheboss/twitch-recorder-ios-releases/releases) page.
+2. Download the latest IPA file.
+3. Open LiveContainer, SideStore, or AltStore.
+4. Import or install the downloaded IPA.
+5. Open Twitch Recorder iOS.
+6. Use it locally or configure the recorder server for full recording features.
+
+## LiveContainer Status
+
+The app has currently only been tested with **LiveContainer**.
+
+SideStore and AltStore installation should work in principle through the same IPA or AltStore source workflow, but they have not been tested yet.
+
+Tested:
+
+- LiveContainer
+
+Not tested yet:
+
+- SideStore
+- AltStore
+
+## Recommended Setup
+
+For the best experience:
+
+1. Install the iOS app through LiveContainer.
+2. Start the Twitch Recorder server on a device that stays online.
+3. Open the app.
+4. Tap **Configure Recorder Server**.
+5. Let the app detect the server automatically.
+6. Start and manage your recordings from your iPhone.
+
+This setup allows recordings to continue even when you are not actively using your iPhone.
+
+## Playback
+
+Native iOS playback is implemented through an `AVPlayerViewController` bridge. No additional Flutter video plugin is required for playback.
+
+## Notes
+
+- The app can be opened and used without the recorder server.
+- Real Twitch recordings require the recorder server.
+- The server performs recording, downloading, processing, Streamlink, and FFmpeg tasks.
+- The iOS app acts as a local interface, remote control, and media browser.
+- Make sure your iPhone and server can reach each other over the same network or through VPN when using Server Mode.
+- The AltStore source is updated automatically from the latest release.
+
+## Disclaimer
+
+This project is not affiliated with, endorsed by, or sponsored by Twitch. Use it responsibly and follow Twitch’s Terms of Service and applicable laws.
